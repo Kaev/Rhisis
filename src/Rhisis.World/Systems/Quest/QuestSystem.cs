@@ -3,6 +3,8 @@ using Rhisis.Core.Data;
 using Rhisis.Core.DependencyInjection;
 using Rhisis.Core.Structures.Game.Dialogs;
 using Rhisis.Core.Structures.Game.Quests;
+using Rhisis.Database;
+using Rhisis.Database.Entities;
 using Rhisis.World.Game.Entities;
 using Rhisis.World.Packets;
 using System;
@@ -15,12 +17,18 @@ namespace Rhisis.World.Systems.Quest
     public sealed class QuestSystem : IQuestSystem
     {
         private readonly ILogger<QuestSystem> _logger;
+        private readonly IDatabase _database;
+        private readonly IQuestPacketFactory _questPacketFactory;
         private readonly INpcDialogPacketFactory _npcDialogPacketFactory;
+        private readonly ITextPacketFactory _textPacketFactory;
 
-        public QuestSystem(ILogger<QuestSystem> logger, INpcDialogPacketFactory npcDialogPacketFactory)
+        public QuestSystem(ILogger<QuestSystem> logger, IDatabase database, IQuestPacketFactory questPacketFactory, INpcDialogPacketFactory npcDialogPacketFactory, ITextPacketFactory textPacketFactory)
         {
             this._logger = logger;
+            this._database = database;
+            this._questPacketFactory = questPacketFactory;
             this._npcDialogPacketFactory = npcDialogPacketFactory;
+            this._textPacketFactory = textPacketFactory;
         }
 
         /// <inheritdoc />
@@ -34,15 +42,17 @@ namespace Rhisis.World.Systems.Quest
         {
             if (player.Object.Level < quest.MinLevel || player.Object.Level > quest.MaxLevel)
             {
-                this._logger.LogWarning($"Cannot start quest '{quest.Title}' (id: '{quest.Id}') for player: '{player}'. Level too low or too high.");
+                this._logger.LogTrace($"Cannot start quest '{quest.Title}' (id: '{quest.Id}') for player: '{player}'. Level too low or too high.");
                 return false;
             }
 
             if (quest.Jobs != null && !quest.Jobs.Contains((DefineJob.Job)player.PlayerData.JobId))
             {
-                this._logger.LogWarning($"Cannot start quest '{quest.Title}' (id: '{quest.Id}') for player: '{player}'. Invalid job.");
+                this._logger.LogTrace($"Cannot start quest '{quest.Title}' (id: '{quest.Id}') for player: '{player}'. Invalid job.");
                 return false;
             }
+
+            // TODO: add more checks
 
             return true;
         }
@@ -106,7 +116,22 @@ namespace Rhisis.World.Systems.Quest
 
             this._npcDialogPacketFactory.SendDialog(player, new[] { quest.AcceptedText }, dialogLinks, questAnswersButtons, quest.Id);
 
-            // TODO: add quest to player's diary
+            var newDatabaseQuest = new DbQuest
+            {
+                QuestId = quest.Id,
+                StartTime = DateTime.UtcNow,
+                CharacterId = player.PlayerData.Id
+            };
+
+            this._database.Quests.Create(newDatabaseQuest);
+            this._database.Complete();
+
+            var acceptedQuest = new Game.Structures.Quest(quest.Id, newDatabaseQuest.Id, player.PlayerData.Id);
+
+            player.QuestDiary.ActiveQuests.Add(acceptedQuest);
+
+            this._questPacketFactory.SendQuest(player, acceptedQuest);
+            this._textPacketFactory.SendDefinedText(player, DefineText.TID_EVE_STARTQUEST, quest.Title);
         }
 
         /// <summary>
