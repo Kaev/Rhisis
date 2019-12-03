@@ -35,6 +35,7 @@ namespace Rhisis.Core.Resources
             public static readonly string ResourcePath = Path.Combine(DataPath, "res");
             public static readonly string MapsPath = Path.Combine(DataPath, "maps");
             public static readonly string ShopsPath = Path.Combine(DataPath, "shops");
+            public static readonly string QuestsPath = Path.Combine(DataPath, "quests");
             public static readonly string DataSub0Path = Path.Combine(ResourcePath, "data");
             public static readonly string DataSub1Path = Path.Combine(ResourcePath, "dataSub1");
             public static readonly string DataSub2Path = Path.Combine(ResourcePath, "dataSub2");

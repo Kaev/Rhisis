@@ -69,7 +69,7 @@ namespace Rhisis.Core.Resources.Loaders
                             quests.TryAdd(quest.Id, quest);
 
                             questsLoaded++;
-                        }                        
+                        }
                     }
                 }
             }

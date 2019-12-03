@@ -52,6 +52,7 @@ namespace Rhisis.World
         {
             this._gameResources.Load(typeof(DefineLoader),
                 typeof(TextLoader),
+                typeof(Rhisis.Scripting.Quests.QuestLoader),
                 typeof(MoverLoader),
                 typeof(ItemLoader),
                 typeof(DialogLoader),
@@ -59,7 +60,6 @@ namespace Rhisis.World
                 typeof(JobLoader),
                 typeof(ExpTableLoader),
                 typeof(PenalityLoader),
-                typeof(QuestLoader),
                 typeof(NpcLoader));
 
             this._chatCommandManager.Load();
