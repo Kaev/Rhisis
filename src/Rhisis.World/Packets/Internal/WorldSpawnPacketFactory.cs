@@ -363,6 +363,11 @@ namespace Rhisis.World.Packets.Internal
             else if (entityToSpawn.Type == WorldEntityType.Drop)
             {
                 var dropItemEntity = entityToSpawn as IItemEntity;
+                if (dropItemEntity is null)
+                {
+                    packet.Dispose();
+                    return;
+                }
 
                 dropItemEntity.Drop.Item.Serialize(packet);
             }
