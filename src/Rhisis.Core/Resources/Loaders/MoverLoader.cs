@@ -72,8 +72,7 @@ namespace Rhisis.Core.Resources.Loaders
             {
                 foreach (var statement in moversPropExFile.Statements)
                 {
-                    var moverBlock = statement as Block;
-                    if (moverBlock is null)
+                    if (!(statement is Block moverBlock))
                         continue;
 
                     if (this._defines.TryGetValue(moverBlock.Name, out int moverId) && moversData.TryGetValue(moverId, out MoverData mover))
