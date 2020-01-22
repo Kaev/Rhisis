@@ -45,7 +45,7 @@ namespace Rhisis.Core.Resources
 
                 var line = lineContent.Trim().ToLower();
 
-                if (line.StartsWith("//") || string.IsNullOrEmpty(line))
+                if (string.IsNullOrEmpty(line) || line.StartsWith("//"))
                     continue;
 
                 string[] lineArray = line.Split(SplitCharacters, StringSplitOptions.RemoveEmptyEntries);

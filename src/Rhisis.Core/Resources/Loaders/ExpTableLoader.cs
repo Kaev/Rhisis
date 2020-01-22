@@ -54,19 +54,6 @@ namespace Rhisis.Core.Resources.Loaders
 
                 var dropLuck = this.LoadDropLuck(dropLuckBlock);
                 var characterExperience = this.LoadCharacterExperience(expCharacterBlock);
-
-                if (dropLuck is null)
-                {
-                    this._logger.LogWarning("Unable to load exp table. Reason: Cannot find drop luck data.");
-                    return;
-                }
-
-                if (characterExperience is null)
-                {
-                    this._logger.LogWarning("Unable to load exp table. Reason: Cannot find character experience data.");
-                    return;
-                }
-
                 var expTableData = new ExpTableData(dropLuck, characterExperience);
                 this._cache.Set(GameResourcesConstants.ExpTables, expTableData);
             }
