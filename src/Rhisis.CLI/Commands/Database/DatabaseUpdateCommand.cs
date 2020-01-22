@@ -43,7 +43,7 @@ namespace Rhisis.CLI.Commands.Database
                 DatabaseConfiguration dbConfig = ConfigurationHelper.Load<DatabaseConfiguration>(DatabaseConfigurationFile);
                 if (dbConfig is null)
                 {
-                    Console.WriteLine("Couldn't load database configuration file during execution of update command.'");
+                    Console.WriteLine("Couldn't load database configuration file during execution of update command.");
                     return;
                 }
 
