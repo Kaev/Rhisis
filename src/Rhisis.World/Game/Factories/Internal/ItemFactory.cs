@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Rhisis.Core.Common;
+using Rhisis.Core.Data;
 using Rhisis.Core.DependencyInjection;
 using Rhisis.Core.Resources;
 using Rhisis.Core.Structures.Game;
@@ -10,6 +11,7 @@ using Rhisis.World.Game.Entities;
 using Rhisis.World.Game.Maps;
 using Rhisis.World.Game.Structures;
 using System;
+using System.Linq;
 
 namespace Rhisis.World.Game.Factories.Internal
 {
@@ -34,20 +36,32 @@ namespace Rhisis.World.Game.Factories.Internal
             this._logger = logger;
             this._serviceProvider = serviceProvider;
             this._gameResources = gameResources;
-            this._itemFactory = ActivatorUtilities.CreateFactory(typeof(Item), new[] { typeof(int), typeof(byte), typeof(byte), typeof(byte), typeof(ItemData), typeof(int) });
+            this._itemFactory = ActivatorUtilities.CreateFactory(typeof(Item), new[] { typeof(int), typeof(byte), typeof(ElementType), typeof(byte), typeof(ItemData), typeof(int) });
             this._itemDatabaseFactory = ActivatorUtilities.CreateFactory(typeof(Item), new[] { typeof(DbItem), typeof(ItemData) });
             this._itemEntityFactory = ActivatorUtilities.CreateFactory(typeof(ItemEntity), Type.EmptyTypes);
         }
 
         /// <inheritdoc />
-        public Item CreateItem(int id, byte refine, byte element, byte elementRefine, int creatorId = -1)
-        {
+        public Item CreateItem(int id, byte refine, ElementType element, byte elementRefine, int creatorId = -1)
+        {            
             if (!this._gameResources.Items.TryGetValue(id, out ItemData itemData))
             {
                 this._logger.LogWarning($"Cannot find item data for item id: '{id}'.");
+                return null;
             }
 
             return this._itemFactory(this._serviceProvider, new object[] { id, refine, element, elementRefine, itemData, creatorId }) as Item;
+        }
+
+        public Item CreateItem(string name, byte refine, ElementType element, byte elementRefine, int creatorId = -1)
+        {
+            var itemData = this._gameResources.Items.FirstOrDefault(x => x.Value.Name == name);
+            if (itemData.Value is null)
+            {
+                this._logger.LogWarning($"Cannot find item data for item name: '{name}'.");
+                return null;
+            }
+            return this._itemFactory(this._serviceProvider, new object[] { itemData.Value.Id, refine, element, elementRefine, itemData.Value, creatorId }) as Item;
         }
 
         /// <inheritdoc />
@@ -56,6 +70,7 @@ namespace Rhisis.World.Game.Factories.Internal
             if (!this._gameResources.Items.TryGetValue(databaseItem.ItemId, out ItemData itemData))
             {
                 this._logger.LogWarning($"Cannot find item data for item id: '{databaseItem.ItemId}'.");
+                return null;
             }
 
             return this._itemDatabaseFactory(this._serviceProvider, new object[] { databaseItem, itemData }) as Item;

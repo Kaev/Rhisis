@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.DataEncryption;
 using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
-using Rhisis.Core.Exceptions;
 using Rhisis.Database.Entities;
 using System;
 using System.Linq;
@@ -41,14 +40,20 @@ namespace Rhisis.Database.Context
         public DbSet<DbShortcut> TaskbarShortcuts { get; set; }
 
         /// <summary>
+        /// Gets or sets the quests.
+        /// </summary>
+        public DbSet<DbQuest> Quests { get; set; }
+
+        /// <summary>
         /// Create a new <see cref="DatabaseContext"/> instance.
         /// </summary>
         /// <param name="options"></param>
+        /// <param name="configuration"></param>
         public DatabaseContext(DbContextOptions options, DatabaseConfiguration configuration)
             : base(options)
         {
             if (string.IsNullOrEmpty(configuration.EncryptionKey))
-                throw new RhisisConfigurationException($"Database configuration doesn't contain a valid encryption key.");
+                return;
 
             this._encryptionProvider = new AesProvider(
                 Convert.FromBase64String(configuration.EncryptionKey), 
@@ -59,7 +64,9 @@ namespace Rhisis.Database.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.UseEncryption(this._encryptionProvider);
+            if (this._encryptionProvider != null)
+                modelBuilder.UseEncryption(this._encryptionProvider);
+
             modelBuilder.Entity<DbUser>()
                 .HasIndex(c => new { c.Username, c.Email })
                 .IsUnique();
@@ -67,6 +74,11 @@ namespace Rhisis.Database.Context
                 .HasMany(x => x.ReceivedMails).WithOne(x => x.Receiver);
             modelBuilder.Entity<DbCharacter>()
                 .HasMany(x => x.SentMails).WithOne(x => x.Sender);
+
+            // Configure quest entity
+            modelBuilder.Entity<DbQuest>()
+                .HasIndex(x => new { x.QuestId, x.CharacterId })
+                .IsUnique();
         }
 
         /// <summary>
