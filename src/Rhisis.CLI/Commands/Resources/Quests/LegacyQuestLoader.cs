@@ -140,7 +140,6 @@ namespace Rhisis.CLI.Commands.Game.Quests
         private void LoadQuestRewards(QuestData quest, Block settingsBlock)
         {
             Instruction goldReward = settingsBlock.GetInstruction("SetEndRewardGold");
-
             if (goldReward != null)
             {
                 quest.MinGold = goldReward.GetParameter<int>(0);
@@ -148,7 +147,6 @@ namespace Rhisis.CLI.Commands.Game.Quests
             }
 
             Instruction experienceReward = settingsBlock.GetInstruction("SetEndRewardExp");
-
             if (experienceReward != null)
             {
                 quest.MinExp = experienceReward.GetParameter<int>(0);
@@ -157,17 +155,13 @@ namespace Rhisis.CLI.Commands.Game.Quests
 
             // Load items
             IEnumerable<Instruction> questRewardItems = settingsBlock.GetInstructions("SetEndRewardItem").Concat(settingsBlock.GetInstructions("SetEndRewardItemWithAbilityOption"));
-
-            if (questRewardItems != null && questRewardItems.Any())
+            quest.RewardItems = questRewardItems.Select(x => new QuestItem
             {
-                quest.RewardItems = questRewardItems.Select(x => new QuestItem
-                {
-                    Sex = x.GetParameter<GenderType>(0),
-                    Id = x.GetParameter<string>(3),
-                    Quantity = x.GetParameter<int>(4),
-                    Refine = x.Parameters.Count > 5 ? x.GetParameter<byte>(5) : default
-                }).ToList();
-            }
+                Sex = x.GetParameter<GenderType>(0),
+                Id = x.GetParameter<string>(3),
+                Quantity = x.GetParameter<int>(4),
+                Refine = x.Parameters.Count > 5 ? x.GetParameter<byte>(5) : default
+            }).ToList();
         }
 
         private void LoadQuestDialogs(QuestData quest, Block questBlock)
