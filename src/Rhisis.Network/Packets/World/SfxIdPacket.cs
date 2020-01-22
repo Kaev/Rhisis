@@ -6,7 +6,7 @@ namespace Rhisis.Network.Packets.World
     /// <summary>
     /// Defines the <see cref="SfxIdPacket"/> structure.
     /// </summary>
-    public struct SfxIdPacket : IPacketDeserializer
+    public class SfxIdPacket : IPacketDeserializer
     {
         /// <summary>
         /// Gets the target id.
