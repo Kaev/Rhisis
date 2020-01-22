@@ -176,7 +176,7 @@ namespace Rhisis.World.Packets.Internal
                 for (var i = 0; i < 6; i++)
                     packet.Write(i);
                 packet.Write<byte>(0); // Base bag item count
-                for (var i = 0; i < 0; i++)
+                for (var i = 0; i < 0; i++) // TODO
                 {
                     packet.Write((byte)i); // Slot
                     packet.Write(i); // Slot
