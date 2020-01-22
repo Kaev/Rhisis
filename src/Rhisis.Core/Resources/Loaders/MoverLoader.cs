@@ -77,8 +77,12 @@ namespace Rhisis.Core.Resources.Loaders
                         this.LoadDropGold(mover, moverBlock.GetInstruction("DropGold"));
                         this.LoadDropItems(mover, moverBlock.GetInstructions("DropItem"));
                         this.LoadDropItemsKind(mover, moverBlock.GetInstructions("DropKind"));
-                        
-                        mover.MaxDropItem = int.Parse(moverBlock.GetVariable("Maxitem").Value.ToString());
+
+                        var maxDropVariable = moverBlock.GetVariable("Maxitem");
+                        if (maxDropVariable is null)
+                            continue;
+
+                        mover.MaxDropItem = int.Parse(maxDropVariable.Value.ToString());
                     }
                 }
             }
