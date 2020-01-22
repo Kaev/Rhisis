@@ -56,7 +56,7 @@ namespace Rhisis.World.Systems.Inventory
 
             player.Inventory = new ItemContainerComponent(MaxItems, InventorySize);
 
-            if (items == null || (items != null && !items.Any()))
+            if (items == null)
                 return;
 
             foreach (DbItem item in items)
