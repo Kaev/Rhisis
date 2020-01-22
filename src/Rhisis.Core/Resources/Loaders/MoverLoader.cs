@@ -70,8 +70,12 @@ namespace Rhisis.Core.Resources.Loaders
 
             using (var moversPropExFile = new IncludeFile(propMoverExPath))
             {
-                foreach (Block moverBlock in moversPropExFile.Statements)
+                foreach (var statement in moversPropExFile.Statements)
                 {
+                    var moverBlock = statement as Block;
+                    if (moverBlock is null)
+                        continue;
+
                     if (this._defines.TryGetValue(moverBlock.Name, out int moverId) && moversData.TryGetValue(moverId, out MoverData mover))
                     {
                         this.LoadDropGold(mover, moverBlock.GetInstruction("DropGold"));
