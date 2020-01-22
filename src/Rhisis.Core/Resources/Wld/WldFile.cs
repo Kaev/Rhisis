@@ -38,12 +38,12 @@ namespace Rhisis.Core.Resources
             string revivalKey = string.Empty;
 
             while (!reader.EndOfStream)
-            {
-                var lineContent = reader.ReadLine();
+            { 
+                string lineContent = reader.ReadLine();
                 if (lineContent is null)
                     continue;
 
-                var line = lineContent.Trim().ToLower();
+                string line = lineContent.Trim().ToLower();
 
                 if (string.IsNullOrEmpty(line) || line.StartsWith("//"))
                     continue;
