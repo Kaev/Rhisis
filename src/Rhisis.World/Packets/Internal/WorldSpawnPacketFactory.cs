@@ -310,6 +310,11 @@ namespace Rhisis.World.Packets.Internal
             else if (entityToSpawn.Type == WorldEntityType.Monster)
             {
                 var monsterEntity = entityToSpawn as IMonsterEntity;
+                if (monsterEntity is null)
+                {
+                    packet.Dispose();
+                    return;
+                }
 
                 packet.Write<short>(5);
                 packet.Write<byte>(0);
