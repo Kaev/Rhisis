@@ -103,50 +103,38 @@ namespace Rhisis.CLI.Commands.Game.Quests
             // Load items
             IEnumerable<Instruction> questEndItems = settingsBlock.GetInstructions("SetEndCondItem");
 
-            if (questEndItems != null && questEndItems.Any())
+            IEnumerable<QuestItem> itemsToRemove = settingsBlock.GetInstructions("SetEndRemoveItem").Select(x => new QuestItem
             {
-                IEnumerable<QuestItem> itemsToRemove = settingsBlock.GetInstructions("SetEndRemoveItem").Select(x => new QuestItem
-                {
-                    Id = x.GetParameter<string>(1)
-                });
-
-                quest.EndQuestItems = questEndItems.Select(x => new QuestItem
-                {
-                    Sex = x.GetParameter<GenderType>(0),
-                    Id = x.GetParameter<string>(3),
-                    Quantity = x.GetParameter<int>(4),
-                    Remove = itemsToRemove.Any(y => y.Id == x.GetParameter<string>(3))
-                }).ToList();
-            }
+                Id = x.GetParameter<string>(1)
+            });
+            quest.EndQuestItems = questEndItems.Select(x => new QuestItem
+            {
+                Sex = x.GetParameter<GenderType>(0),
+                Id = x.GetParameter<string>(3),
+                Quantity = x.GetParameter<int>(4),
+                Remove = itemsToRemove.Any(y => y.Id == x.GetParameter<string>(3))
+            }).ToList();
 
             // Load kill monsters
 
             IEnumerable<Instruction> questKillNpcs = settingsBlock.GetInstructions("SetEndCondKillNPC");
-
-            if (questKillNpcs != null && questKillNpcs.Any())
+            quest.EndQuestMonsters = questKillNpcs.OrderBy(x => x.GetParameter<int>(0)).Select(x => new QuestMonster
             {
-                quest.EndQuestMonsters = questKillNpcs.OrderBy(x => x.GetParameter<int>(0)).Select(x => new QuestMonster
-                {
-                    Id = x.GetParameter<string>(1),
-                    Amount = x.GetParameter<int>(2)
-                });
-            }
+                Id = x.GetParameter<string>(1),
+                Amount = x.GetParameter<int>(2)
+            });
 
             // Load patrols
 
             IEnumerable<Instruction> questPatrols = settingsBlock.GetInstructions("SetEndCondPatrolZone");
-
-            if (questPatrols != null && questPatrols.Any())
+            quest.EndQuestPatrols = questPatrols.Select(x => new QuestPatrol
             {
-                quest.EndQuestPatrols = questPatrols.Select(x => new QuestPatrol
-                {
-                    MapId = x.GetParameter<string>(0),
-                    Left = x.GetParameter<int>(1),
-                    Top = x.GetParameter<int>(2),
-                    Right = x.GetParameter<int>(3),
-                    Bottom = x.GetParameter<int>(4)
-                });
-            }
+                MapId = x.GetParameter<string>(0),
+                Left = x.GetParameter<int>(1),
+                Top = x.GetParameter<int>(2),
+                Right = x.GetParameter<int>(3),
+                Bottom = x.GetParameter<int>(4)
+            });
         }
 
         private void LoadQuestRewards(QuestData quest, Block settingsBlock)
