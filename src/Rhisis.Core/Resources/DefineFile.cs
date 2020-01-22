@@ -78,7 +78,12 @@ namespace Rhisis.Core.Resources
                     if (this._scanner.CurrentTokenIs("#"))
                         continue;
 
-                    object defineValue = this.ParseDefineValue(this._scanner.GetToken());
+                    var defineValueToken = this._scanner.GetToken();
+
+                    if (defineValueToken is null)
+                        continue;
+
+                    object defineValue = this.ParseDefineValue(defineValueToken);
 
                     if (this._defines.ContainsKey(defineName))
                         this._defines[defineName] = defineValue;
