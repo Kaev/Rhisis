@@ -272,7 +272,7 @@ namespace Rhisis.CLI.Commands.Game.Quests
         /// <param name="dialogs">Dialogs string enumerable/array.</param>
         private void WriteDialogSection(StreamWriter writer, int level, string sectionName, IEnumerable<string> dialogs)
         {
-            if (dialogs == null || (dialogs != null && !dialogs.Any()))
+            if (dialogs == null || !dialogs.Any())
             {
                 WriteAtLevel(writer, level, $"{sectionName} = nil");
             }
