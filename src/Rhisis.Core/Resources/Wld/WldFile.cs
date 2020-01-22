@@ -38,7 +38,11 @@ namespace Rhisis.Core.Resources
 
             while (!reader.EndOfStream)
             {
-                var line = reader.ReadLine().Trim().ToLower();
+                var lineContent = reader.ReadLine();
+                if (lineContent is null)
+                    continue;
+
+                var line = lineContent.Trim().ToLower();
 
                 if (line.StartsWith("//") || string.IsNullOrEmpty(line))
                     continue;
