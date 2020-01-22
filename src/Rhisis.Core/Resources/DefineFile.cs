@@ -95,6 +95,7 @@ namespace Rhisis.Core.Resources
         {
             if (this._defines.Any())
                 this._defines.Clear();
+            this._scanner.Dispose();
         }
 
         /// <summary>
