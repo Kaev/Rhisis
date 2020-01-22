@@ -234,6 +234,11 @@ namespace Rhisis.World.Packets.Internal
             if (entityToSpawn.Type == WorldEntityType.Player)
             {
                 var playerEntity = entityToSpawn as IPlayerEntity;
+                if (playerEntity is null)
+                {
+                    packet.Dispose();
+                    return;
+                }
 
                 packet.Write<short>(0);
                 packet.Write<byte>(1); // is player?
