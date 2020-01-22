@@ -93,8 +93,8 @@ namespace Rhisis.World.Systems.Quest
                     {
                         quest.Monsters = new Dictionary<int, short>
                         {
-                            { _gameResources.GetDefinedValue(questScript.EndConditions.Monsters?.ElementAtOrDefault(0)?.Id), (short)x.MonsterKilled1 },
-                            { _gameResources.GetDefinedValue(questScript.EndConditions.Monsters?.ElementAtOrDefault(1)?.Id), (short)x.MonsterKilled2 }
+                            { _gameResources.GetDefinedValue(questScript.EndConditions.Monsters.ElementAtOrDefault(0)?.Id), (short)x.MonsterKilled1 },
+                            { _gameResources.GetDefinedValue(questScript.EndConditions.Monsters.ElementAtOrDefault(1)?.Id), (short)x.MonsterKilled2 }
                         };
                     }
 
