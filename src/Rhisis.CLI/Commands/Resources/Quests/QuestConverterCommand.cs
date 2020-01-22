@@ -96,7 +96,7 @@ namespace Rhisis.CLI.Commands.Game.Quests
             using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             using var writer = new StreamWriter(fileStream);
 
-            if (quests == null || (quests != null && !quests.Any()))
+            if (quests == null || !quests.Any())
             {
                 writer.WriteLine($"{QuestScriptConstants.QuestDefinitionKey} = nil");
             }
