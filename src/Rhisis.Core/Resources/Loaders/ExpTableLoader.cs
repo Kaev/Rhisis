@@ -38,8 +38,22 @@ namespace Rhisis.Core.Resources.Loaders
 
             using (var expTableFile = new IncludeFile(expTablePath, @"([(){}=,;\n\r\t ])"))
             {
-                var dropLuck = this.LoadDropLuck(expTableFile.GetBlock("expDropLuck"));
-                var characterExperience = this.LoadCharacterExperience(expTableFile.GetBlock("expCharacter"));
+                var dropLuckBlock = expTableFile.GetBlock("expDropLuck");
+                if (dropLuckBlock is null)
+                {
+                    this._logger.LogWarning("Unable to load exp table. Reason: Cannot find drop luck data.");
+                    return;
+                }
+                
+                var expCharacterBlock = expTableFile.GetBlock("expCharacter");
+                if (expCharacterBlock is null)
+                {
+                    this._logger.LogWarning("Unable to load exp table. Reason: Cannot find character experience data.");
+                    return;
+                }
+
+                var dropLuck = this.LoadDropLuck(dropLuckBlock);
+                var characterExperience = this.LoadCharacterExperience(expCharacterBlock);
 
                 if (dropLuck is null)
                 {
