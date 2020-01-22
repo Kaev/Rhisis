@@ -52,8 +52,8 @@ namespace Rhisis.Core.Resources.Loaders
                     return;
                 }
 
-                var dropLuck = this.LoadDropLuck(dropLuckBlock);
-                var characterExperience = this.LoadCharacterExperience(expCharacterBlock);
+                IEnumerable<long[]> dropLuck = this.LoadDropLuck(dropLuckBlock);
+                IReadOnlyDictionary<int, CharacterExpTableData> characterExperience = this.LoadCharacterExperience(expCharacterBlock);
                 var expTableData = new ExpTableData(dropLuck, characterExperience);
                 this._cache.Set(GameResourcesConstants.ExpTables, expTableData);
             }
