@@ -192,7 +192,7 @@ namespace Rhisis.CLI.Commands.Game.Quests
                 return false;
             }
 
-            if (quest.StartJobs == null || (quest.StartJobs != null && !quest.StartJobs.Any()))
+            if (quest.StartJobs == null || !quest.StartJobs.Any())
             {
                 Console.WriteLine($"{quest.Name}: A quest must be linked to a job.");
                 return false;
