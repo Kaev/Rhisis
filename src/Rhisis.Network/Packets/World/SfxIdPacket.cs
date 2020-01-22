@@ -52,7 +52,7 @@ namespace Rhisis.Network.Packets.World
         /// <param name="other">Other <see cref="SfxIdPacket"/></param>
         public bool Equals(SfxIdPacket other)
         {
-            return this.Type == other.Type && this.IdSfxHit == other.IdSfxHit && this.Type == other.Type && this.Skill == other.Skill && this.MaxDamageCount == other.MaxDamageCount;
+            return this.Type == other.Type && this.IdSfxHit == other.IdSfxHit && this.Skill == other.Skill && this.MaxDamageCount == other.MaxDamageCount;
         }
     }
 }
